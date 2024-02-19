@@ -25,15 +25,12 @@ ggplot(data = data, aes(y = Sucesso,
   geom_boxplot() +
   geom_jitter(size = .8)+
   theme_minimal()
-<<<<<<< HEAD
-=======
 ```
 
 #### Modelo binomial com controle "Agua"
 ```{r echo= TRUE}
 datactag<-data[data$Tratamento %in% c("Agua", "2.5%","5%"),]
 datactag
->>>>>>> 0cf37ffdb890f44c985b5792efeb0377a6fd8bdb
 ```
 
 #### Modelo binomial
