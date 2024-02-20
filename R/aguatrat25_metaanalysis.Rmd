@@ -1,0 +1,46 @@
+---
+title: "Experiment metaanalysis"
+author: "Marianela Pini"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+#carregando pacotes
+library(metafor)
+library(dplyr)
+library(ggpubr)
+```
+
+No experimento tivemos dois controles (agua e PEG), e dois tratamentos com concentrações diferentes do extrato de leucaena leucocephala (trat 25 e trat50). No total fiz quatro metaanálises, para ver os tamanhos de efeito (odds ratio) dos extratos aquosos. 
+
+### Primeiro metaanálise, comparando agua com trat25
+
+```{r echo=FALSE}
+#carregando dados
+dataag25<- read.csv(here::here("Data/processed/metaanalysis", "aguacomtrat25.csv"), sep = ";")
+dataag25$sucesso_ag<-as.numeric(dataag25$sucesso_ag)
+dataag25$sucesso_trat25<-as.numeric(dataag25$sucesso_trat25)
+dataag25$fracasso_ag<-as.numeric(dataag25$fracasso_ag)
+dataag25$fracasso_trat25<-as.numeric(dataag25$fracasso_trat25)
+dataag25$especie<-as.factor(dataag25$especie)
+dataag25$bandeja<-as.factor(dataag25$bandeja)
+dataag25
+
+```
+
+### Calculo do tamanho de efeito (odds ratio)
+
+
+```{r }
+dataag25 <- escalc(measure="OR2DN", ai = sucesso_trat25, bi = fracasso_trat25, ci = sucesso_ag, di = fracasso_ag, replace = FALSE, data = dataag25)
+dataag25
+```
+
+### Modelo com o fator aleatório da espécie/bandeja
+
+```{r}
+model_geral <- rma.mv(yi, vi, random = ~1 | especie/bandeja, data = dataag25,verbose = TRUE,control=list(rel.tol=1e-8))
+model_geral
+```
+

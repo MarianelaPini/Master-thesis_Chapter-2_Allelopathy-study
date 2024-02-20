@@ -1,0 +1,79 @@
+---
+title: "Analise Citharexylum myrianthum"
+author: "Marianela Pini"
+date: "`r Sys.Date()`"
+output: html_document
+---
+## Análise de dados do experimento de Alelopatia de Leucaena leucocephala sobre sementes nativas do Brasil           
+```{r, include=FALSE, echo= FALSE}
+#carregando pacotes#
+library(lme4)
+library(DHARMa)
+library(ggplot2)
+#Abrindo os dados
+data<- read.csv(here::here("Data/processed", "Citharexylum_germination.csv"), sep = ";", header=TRUE)
+data
+#tratamentos como fator
+data$tratamento<-factor(data$tratamento,levels = (c("agua","peg","trat25","trat50")))
+data$tratamento
+```
+#### Gráfico dos dados
+```{r, echo= FALSE}
+ggplot(data = data, aes(y = sucesso,
+                            x = tratamento,
+                            fill = tratamento)) +
+  geom_boxplot() +
+  geom_jitter(size = .8)+
+  theme_minimal()
+```
+
+#### Modelo binomial
+#### Criando a variável resposta do modelo, combinação de sucessos e falhas, por tratamento em cada bandeja
+```{r}
+prop<-cbind(success = data$sucesso, fail = data$fracasso)
+```
+#### Seleção de modelos
+#### Para isso, nosso modelo cheio considera bandejas no fator aleatório, e tratamento como variável preditora. Nossa variável resposta é prop (odds ratio)
+```{r}
+#modelo cheio
+mod.ci1<-glmer(prop ~ tratamento + (1|bandeja), data = data, family = "binomial")
+summary(mod.ci1)
+
+#Seleção comparando o modelo com variável tratamento com modelo nulo
+#
+mod.ci2<- glmer(prop ~ 1 + (1|bandeja), data = data, family = "binomial")
+summary(mod.ci2)
+#
+anova(mod.ci1, mod.ci2)
+```
+#### Modelos selecionado, mod.ci2 (modelo nulo)
+#### Criando os residous
+```{r, echo=FALSE}
+residuo <- simulateResiduals(fittedModel = mod.ci2, n = 1000)
+plot(residuo)
+```
+
+#### Modelo binomial cheio com peg como nivel basal
+```{r}
+#Tratamentos como fator, e relevel para colocar o peg como nivel basal
+data$tratamento<- relevel(data$tratamento, ref = "peg")
+data$tratamento
+#modelo cheio com peg basal
+mod.ci1peg<-glmer(prop ~ tratamento + (1|bandeja), data = data, family = "binomial")
+summary(mod.ci1peg)
+#Seleção comparando o modelo com variável tratamento com modelo nulo
+#
+mod.ci2<- glmer(prop ~ 1 + (1|bandeja), data = data, family = "binomial")
+summary(mod.ci2)
+#
+anova(mod.ci1peg, mod.ci2)
+```
+#### Modelos selecionado, mod.ci2 (modelo nulo)
+#### Criando os residous
+```{r, echo=FALSE}
+residuo <- simulateResiduals(fittedModel = mod.ci2, n = 1000)
+plot(residuo)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+

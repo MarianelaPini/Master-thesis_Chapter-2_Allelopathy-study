@@ -1,0 +1,78 @@
+---
+title: "Analise Lithraea molleoides"
+author: "Marianela Pini"
+date: "`r Sys.Date()`"
+output: html_document
+---
+## Análise de dados do experimento de Alelopatia de Leucaena leucocephala sobre sementes nativas do Brasil           
+```{r setup, include=FALSE, echo= FALSE}
+#carregando pacotes#
+library(lme4)
+library(DHARMa)
+library(ggplot2)
+#Abrindo os dados
+data<- read.csv(here::here("Data/processed", "Lithraea_germination.csv"), sep = ";", header=TRUE)
+data
+#tratamentos como fator
+data$tratamento<-factor(data$tratamento,levels = (c("agua","peg","trat25","trat50")))
+data$tratamento
+```
+#### Gráfico dos dados
+```{r, echo= FALSE}
+ggplot(data = data, aes(y = sucesso,
+                            x = tratamento,
+                            fill = tratamento)) +
+  geom_boxplot() +
+  geom_jitter(size = .8)+
+  theme_minimal()
+```
+
+#### Modelo binomial
+#### Criando a variável resposta do modelo, combinação de sucessos e falhas, por tratamento em cada bandeja
+```{r}
+prop<-cbind(success = data$sucesso, fail = data$fracasso)
+```
+#### Seleção de modelos
+#### Para isso, nosso modelo cheio considera bandejas no fator aleatório, e tratamento como variável preditora. Nossa variável resposta é prop (odds ratio)
+```{r}
+#modelo cheio
+mod.li1<-glmer(prop ~ tratamento + (1|bandeja), data = data, family = "binomial")
+summary(mod.li1)
+
+#Seleção comparando o modelo com variável tratamento com modelo nulo
+#
+mod.li2<- glmer(prop ~ 1 + (1|bandeja), data = data, family = "binomial")
+summary(mod.li2)
+#
+anova(mod.li1, mod.li2)
+```
+#### Modelos selecionado, mod.li2 (modelo nulo)
+#### Criando os residous
+```{r, echo=FALSE}
+residuo <- simulateResiduals(fittedModel = mod.li2, n = 1000)
+plot(residuo)
+```
+
+#### Modelo binomial cheio com peg como nivel basal
+```{r}
+#Tratamentos como fator, e relevel para colocar o peg como nivel basal
+data$tratamento<- relevel(data$tratamento, ref = "peg")
+data$tratamento
+#modelo cheio com peg basal
+mod.li1peg<-glmer(prop ~ tratamento + (1|bandeja), data = data, family = "binomial")
+summary(mod.li1peg)
+#Seleção comparando o modelo com variável tratamento com modelo nulo
+#
+mod.li2<- glmer(prop ~ 1 + (1|bandeja), data = data, family = "binomial")
+summary(mod.li2)
+#
+anova(mod.li1peg, mod.li2)
+```
+#### Modelos selecionado, mod.li1peg (modelo nulo)
+#### Criando os residous
+```{r, echo=FALSE}
+residuo <- simulateResiduals(fittedModel = mod.li2, n = 1000)
+plot(residuo)
+
+```
+
