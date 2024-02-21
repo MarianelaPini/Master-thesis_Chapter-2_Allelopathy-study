@@ -42,5 +42,126 @@ dataag25
 ```{r}
 model_geral <- rma.mv(yi, vi, random = ~1 | especie/bandeja, data = dataag25,verbose = TRUE,control=list(rel.tol=1e-8))
 model_geral
+forest(model_geral,
+       xlab = "Odds ratio",xlim = c(-12,16),
+       cex = 0.8, 
+       order = "obs",
+       slab = dataag25$especie,
+       header="especie",mlab="Geral model")
 ```
 
+
+### Segundo metaanálise, comparando agua com trat50
+
+```{r echo=FALSE}
+#carregando dados
+dataag50<- read.csv(here::here("Data/processed/metaanalysis", "aguacomtrat50.csv"), sep = ";")
+dataag50$sucesso_ag<-as.numeric(dataag50$sucesso_ag)
+dataag50$sucesso_trat50<-as.numeric(dataag50$sucesso_trat50)
+dataag50$fracasso_ag<-as.numeric(dataag50$fracasso_ag)
+dataag50$fracasso_trat50<-as.numeric(dataag50$fracasso_trat50)
+dataag50$especie<-as.factor(dataag50$especie)
+dataag50$bandeja<-as.factor(dataag50$bandeja)
+dataag50
+
+```
+
+### Calculo do tamanho de efeito (odds ratio)
+
+
+```{r }
+dataag50 <- escalc(measure="OR2DN", ai = sucesso_trat50, bi = fracasso_trat50, ci = sucesso_ag, di = fracasso_ag, replace = FALSE, data = dataag50)
+dataag50
+```
+
+### Modelo com o fator aleatório da espécie/bandeja
+
+```{r}
+model_geralag50 <- rma.mv(yi, vi, random = ~1 | especie/bandeja, data = dataag50)
+model_geralag50
+#Forest plot
+forest(model_geralag50,
+       xlab = "Odds ratio",xlim = c(-12,16),
+       cex = 0.8, 
+       order = "obs",
+       slab = dataag50$especie,
+       header="especie",mlab="Geral model")
+```
+
+
+
+### Terceiro metaanálise, comparando PEG com trat25
+
+```{r echo=FALSE}
+#carregando dados
+datapeg25<- read.csv(here::here("Data/processed/metaanalysis", "pegcomtrat25.csv"), sep = ";")
+datapeg25$sucesso_peg<-as.numeric(datapeg25$sucesso_peg)
+datapeg25$sucesso_trat25<-as.numeric(datapeg25$sucesso_trat25)
+datapeg25$fracasso_peg<-as.numeric(datapeg25$fracasso_peg)
+datapeg25$fracasso_trat25<-as.numeric(datapeg25$fracasso_trat25)
+datapeg25$especie<-as.factor(datapeg25$especie)
+datapeg25$bandeja<-as.factor(datapeg25$bandeja)
+datapeg25
+
+```
+
+### Calculo do tamanho de efeito (odds ratio)
+
+
+```{r }
+datapeg25 <- escalc(measure="OR2DN", ai = sucesso_trat25, bi = fracasso_trat25, ci = sucesso_peg, di = fracasso_peg, replace = FALSE, data = datapeg25)
+datapeg25
+```
+
+### Modelo com o fator aleatório da espécie/bandeja
+
+```{r}
+model_geralp25 <- rma.mv(yi, vi, random = ~1 | especie/bandeja, data = datapeg25)
+model_geralp25
+forest(model_geralp25,
+       xlab = "Odds ratio",xlim = c(-12,16),
+       cex = 0.8, 
+       order = "obs",
+       slab = datapeg25$especie,
+       header="especie",mlab="Geral model")
+```
+
+
+### Quarto metaanálise, comparando PEG com trat50
+
+```{r echo=FALSE}
+#carregando dados
+datapeg50<- read.csv(here::here("Data/processed/metaanalysis", "pegcomtrat50.csv"), sep = ";")
+datapeg50$sucesso_peg<-as.numeric(datapeg50$sucesso_peg)
+datapeg50$sucesso_trat50<-as.numeric(datapeg50$sucesso_trat50)
+datapeg50$fracasso_peg<-as.numeric(datapeg50$fracasso_peg)
+datapeg50$fracasso_trat50<-as.numeric(datapeg50$fracasso_trat50)
+datapeg50$especie<-as.factor(datapeg50$especie)
+datapeg50$bandeja<-as.factor(datapeg50$bandeja)
+datapeg50
+
+```
+
+### Calculo do tamanho de efeito (odds ratio)
+
+
+```{r }
+datapeg50 <- escalc(measure="OR2DN", ai = sucesso_trat50, bi = fracasso_trat50, ci = sucesso_peg, di = fracasso_peg, replace = FALSE, data = datapeg50)
+datapeg50
+```
+
+### Modelo com o fator aleatório da espécie/bandeja
+
+```{r}
+model_geralp50 <- rma.mv(yi, vi, random = ~1 | especie/bandeja, data = datapeg50)
+model_geralp50
+forest(model_geralp50,
+       xlab = "Odds ratio",xlim = c(-12,16),
+       cex = 0.8, 
+       order = "obs",
+       slab = datapeg50$especie,
+       header="especie",mlab="Geral model")
+```
+
+
+```{r}
