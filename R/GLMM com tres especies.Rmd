@@ -1,0 +1,87 @@
+---
+title: "GLMM com as tres especies"
+author: "Marianela Pini"
+date: "`r Sys.Date()`"
+output: html_document
+---
+## Análise de dados do experimento de Alelopatia de Leucaena leucocephala sobre sementes nativas do Brasil, juntando as tres espécies que foram utilizadas           
+```{r setup, include=FALSE, echo= FALSE}
+#carregando pacotes#
+library(lme4)
+library(DHARMa)
+library(ggplot2)
+#Abrindo os dados
+data<- read.csv(here::here("Data/processed", "Species_germination.csv"), sep = ";", header=TRUE)
+data
+#tratamentos como fator
+data$tratamento<-factor(data$tratamento,levels = (c("agua","peg","trat25","trat50")))
+```
+#### Gráfico dos dados
+```{r, echo= FALSE}
+ggplot(data = data, aes(y = sucesso,
+                            x = tratamento,
+                            fill = tratamento)) +
+  geom_boxplot() +
+  geom_jitter(size = .8)+
+  theme_minimal()
+```
+
+#### Grafico separando as espécies
+```{r  echo=FALSE}
+ggplot(data = data, aes(x=tratamento,
+                        y= sucesso, 
+                        color=especie)) +
+  geom_boxplot(outlier.shape=NA)+
+  geom_point(position=position_jitterdodge())
+theme_minimal()
+```
+
+
+#### Modelo binomial
+#### Criando a variável resposta do modelo, combinação de sucessos e falhas, por tratamento em cada bandeja
+```{r}
+prop<-cbind(success = data$sucesso, fail = data$fracasso)
+```
+#### Seleção de modelos
+#### Para isso, nosso modelo cheio considera bandejas e especies no fator aleatório, e tratamento como variável preditora. Nossa variável resposta é prop (odds ratio)
+```{r}
+#modelo cheio
+mod.1<-glmer(prop ~ tratamento + (especie|bandeja), data = data, family = "binomial")
+summary(mod.1)
+
+#Seleção comparando o modelo com variável aleátoria de espécie e bandeja, com modelo só com bandeja no fator aleatório
+#
+mod.2<- glmer(prop ~ tratamento + (1|bandeja), data = data, family = "binomial")
+summary(mod.2)
+#
+anova(mod.1, mod.2)
+```
+#### Modelos selecionado, mod.sc1 (modelo com variavel preditora tratamento e variavel aleatoria especie|bandeja)
+#### Criando os residous
+```{r, echo=FALSE}
+residuo <- simulateResiduals(fittedModel = mod.1, n = 1000)
+plot(residuo)
+```
+
+#### Modelo binomial cheio com peg como nivel basal
+```{r}
+#Tratamentos como fator, e relevel para colocar o peg como nivel basal
+data$tratamento<- relevel(data$tratamento, ref = "peg")
+#modelo cheio com peg basal
+mod.1peg<-glmer(prop ~ tratamento + (especie|bandeja), data = data, family = "binomial")
+summary(mod.1peg)
+#Seleção comparando o modelo com variável aleatoria só bandejas
+#
+mod.2peg<- glmer(prop ~ tratamento + (1|bandeja), data = data, family = "binomial")
+summary(mod.2peg)
+#
+anova(mod.1peg, mod.2peg)
+```
+#### Modelos selecionado, mod.1peg (modelo com variavel aleatoria especie e bandeja,peg nivel basal)
+#### Criando os residous
+```{r, echo=FALSE}
+residuo <- simulateResiduals(fittedModel = mod.1peg, n = 1000)
+plot(residuo)
+
+```
+

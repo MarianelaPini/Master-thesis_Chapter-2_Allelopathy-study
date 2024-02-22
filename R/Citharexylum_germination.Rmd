@@ -17,7 +17,31 @@ data
 data$tratamento<-factor(data$tratamento,levels = (c("agua","peg","trat25","trat50")))
 data$tratamento
 ```
-#### Gráfico dos dados
+#### Gráfico dos dados com a chance (sucesso/falha)
+```{r, echo=FALSE}
+boxplot(odds ~tratamento, data=data)
+stripchart(odds ~ tratamento,
+           data = data,
+           method = "jitter",
+           pch = 19, col= 1:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
+
+### Grafico com sucesso no eixo y
+
+```{r}
+boxplot(sucesso ~tratamento, data=data)
+stripchart(sucesso ~ tratamento,
+           data = data,
+           method = "jitter",
+           pch = 19, col= 1:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
+
 ```{r, echo= FALSE}
 ggplot(data = data, aes(y = sucesso,
                             x = tratamento,
@@ -25,6 +49,9 @@ ggplot(data = data, aes(y = sucesso,
   geom_boxplot() +
   geom_jitter(size = .8)+
   theme_minimal()
+```
+```{r}
+
 ```
 
 #### Modelo binomial

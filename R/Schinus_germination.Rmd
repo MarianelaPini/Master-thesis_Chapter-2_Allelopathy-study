@@ -17,7 +17,30 @@ data
 data$Tratamento<-factor(data$Tratamento,levels = (c("agua","peg","trat25","trat50")))
 data$Tratamento
 ```
-#### Gráfico dos dados
+#### Gráfico dos dados com chance no eixo y (sucesso/falha)
+
+```{r, echo=FALSE}
+boxplot(odds ~Tratamento, data=data)
+stripchart(odds ~ Tratamento,
+           data = data,
+           method = "jitter",
+           pch = 19, col= 1:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
+### Grafico dos dados com sucesso no eixo y
+
+```{r, echo=FALSE}
+boxplot(Sucesso ~Tratamento, data=data)
+stripchart(Sucesso ~ Tratamento,
+           data = data,
+           method = "jitter",
+           pch = 19, col= 1:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
 ```{r, echo= FALSE}
 ggplot(data = data, aes(y = Sucesso,
                             x = Tratamento,
@@ -27,11 +50,6 @@ ggplot(data = data, aes(y = Sucesso,
   theme_minimal()
 ```
 
-#### Modelo binomial com controle "Agua"
-```{r echo= TRUE}
-datactag<-data[data$Tratamento %in% c("Agua", "2.5%","5%"),]
-datactag
-```
 
 #### Modelo binomial
 #### Criando a variável resposta do modelo, combinação de sucessos e falhas, por tratamento em cada bandeja
@@ -53,8 +71,12 @@ summary(mod.sc2)
 anova(mod.sc1, mod.sc2)
 ```
 #### Modelos selecionado, mod.sc1 (modelo com variavel preditora tratamento)
+```{r}
+```
+
 #### Criando os residous
 ```{r, echo=FALSE}
+
 residuo <- simulateResiduals(fittedModel = mod.sc1, n = 1000)
 plot(residuo)
 ```
