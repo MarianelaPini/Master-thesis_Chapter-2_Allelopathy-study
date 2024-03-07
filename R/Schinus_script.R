@@ -33,10 +33,20 @@ mod.scag3
 summary(mod.scag3)
 #
 anova(mod.scag2, mod.scag3)
-AIC(mod.scag1, mod.scag2, mod.scag3)
-#seleciono o modelo nulo,criando os residous
+#seleciono o modelo cheio,criando os residous
 residuo <- simulateResiduals(fittedModel = mod.scag2, n = 1000)
 plotSimulatedResiduals(residuo)
+#preditos
+proppred<-(predict(mod.scag2, type="response")) 
+proppred
+prop
+comidos <- ggplot(data = data, aes(x = Tratamento, y = proppred, fill=Tratamento))+
+          geom_boxplot() +
+          geom_jitter(size = .8)+
+          theme_minimal()
+agua<-proppred[c(1,2,3,4,5,6,7,8,9,10)]
+mean(agua)
+comidos
 #modelo cheio com peg como nivel basal
 #
 #Primeiro coloco o peg como nivel basal
@@ -81,3 +91,4 @@ ggplot(data = data, aes(y = Sucesso,
   geom_boxplot() +
   geom_jitter(size = .8)+
   theme_minimal()
+proppred=(predict(model3, type="response")) 

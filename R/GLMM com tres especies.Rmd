@@ -46,7 +46,7 @@ prop<-cbind(success = data$sucesso, fail = data$fracasso)
 #### Para isso, nosso modelo cheio considera bandejas e especies no fator aleatório, e tratamento como variável preditora. Nossa variável resposta é prop (odds ratio)
 ```{r}
 #modelo cheio
-mod.1<-glmer(prop ~ tratamento + (especie|bandeja), data = data, family = "binomial")
+mod.1<-glmer(prop ~ tratamento + (1|especie + 1|bandeja), data = data, family = "binomial")
 summary(mod.1)
 
 #Seleção comparando o modelo com variável aleátoria de espécie e bandeja, com modelo só com bandeja no fator aleatório
