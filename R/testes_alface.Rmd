@@ -30,6 +30,9 @@ stripchart(tamanho ~ tratamento,
 ggplot(data = data, aes(y = tamanho,
                         x = tratamento,
                         fill = tratamento)) +
+    labs(title = "Primeira medida alface",
+       x = "Tratamento",  # Title for x-axis
+       y = "Tamanho 1")+
   geom_boxplot() +
   geom_jitter(size = .8)+
   theme_minimal()
@@ -74,6 +77,9 @@ ggplot(data = data, aes(y = tamanho,
                         x = tratamento,
                         fill = tratamento)) +
   geom_boxplot() +
+    labs(title = "Segunda medida alface",
+       x = "Tratamento",  # Title for x-axis
+       y = "Tamanho 2")+
   geom_jitter(size = .8)+
   theme_minimal()
 knitr::opts_chunk$set(echo = TRUE)

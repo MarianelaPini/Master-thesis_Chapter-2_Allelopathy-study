@@ -10,45 +10,30 @@ output: html_document
 library(lme4)
 library(DHARMa)
 library(ggplot2)
+library(ggbeeswarm)
 #Abrindo os dados
 data<- read.csv(here::here("Data/processed", "Lithraea_germination.csv"), sep = ";", header=TRUE)
 data
 #tratamentos como fator
-data$tratamento<-factor(data$tratamento,levels = (c("agua","peg","trat25","trat50")))
+data$tratamento<-factor(data$tratamento,levels = (c("agua","peg","ext2.5","ext5.0")))
 data$tratamento
+#proporção dos dados de sementes germinadas
+data$propor<-data$sucesso/data$numerototal
+data$propor
+mean_propor<- aggregate(propor ~ tratamento, data = data, FUN = mean)
+mean_propor
 ```
 
-#### Gráfico dos dados com chance no eixo y(sucesso/falha)
-
-```{r, echo=FALSE}
-boxplot(odds ~tratamento, data=data)
-stripchart(odds ~ tratamento,
-           data = data,
-           method = "jitter",
-           pch = 19, col= 1:4,
-           vertical = TRUE,
-           add = TRUE)
-```
-
-### Grafico com sucesso no eixo y
-
-```{r, echo=FALSE}
-boxplot(sucesso ~tratamento, data=data)
-stripchart(sucesso ~ tratamento,
-           data = data,
-           method = "jitter",
-           pch = 19, col= 1:4,
-           vertical = TRUE,
-           add = TRUE)
-```
+### Grafico dos dados, proporção sementes germinadas
 
 ```{r, echo= FALSE}
-ggplot(data = data, aes(y = sucesso,
-                            x = tratamento,
-                            fill = tratamento)) +
-  geom_boxplot() +
-  geom_jitter(size = .8)+
-  theme_minimal()
+plot_lithraea <- ggplot(data = data, aes(x = tratamento, y = propor, colour=tratamento))+
+  scale_y_continuous(name = "Proporção de sementes germinadas")+
+  scale_x_discrete(name = "Tipo de Solução")+
+  geom_beeswarm(size=3, alpha=0.4)+
+                      theme_classic()
+plot_lithraea
+ggsave("plot_lithraea.jpg", width=6, height=4.5, dpi=600)
 ```
 
 #### Modelo binomial

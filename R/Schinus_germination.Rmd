@@ -20,7 +20,10 @@ data$Tratamento
 #### Gráfico dos dados com chance no eixo y (sucesso/falha)
 
 ```{r, echo=FALSE}
-boxplot(odds ~Tratamento, data=data)
+par (mar = c(3, 6, 2, 3), cex.axis = 1, bty = "l")
+boxplot(odds~ Tratamento, data = data,ylab = "razão de chance
+(germinadas/não germinadas)")
+text(x = c(1, 2, 3, 4), y = c(1.3,0.3,1.3,1.3), labels = c("a", "b", "a","a"),cex = 0.8)
 stripchart(odds ~ Tratamento,
            data = data,
            method = "jitter",
