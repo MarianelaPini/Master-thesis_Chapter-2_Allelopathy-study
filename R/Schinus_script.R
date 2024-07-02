@@ -73,7 +73,13 @@ library(ggplot2)
 ps <- ggplot(data = data, aes(x = Tratamento, y = propor, colour=Tratamento))+
   scale_y_continuous(name = "Proporção de sementes germinadas")+
   scale_x_discrete(name = "Tipo de Solução")+
-  geom_beeswarm(size=3, alpha=0.1)+theme_classic()
+  geom_beeswarm(size=5, alpha=0.1)+theme_classic()+
+  theme(axis.title.x = element_text(size = 17),  # X-axis title size
+        axis.title.y = element_text(size = 17),  # Y-axis title size
+        axis.text.x = element_text(size = 15),   # X-axis text size
+        axis.text.y = element_text(size = 15),   # Y-axis text size
+        legend.title = element_text(size = 15),  # Legend title size
+        legend.text = element_text(size = 14))
   
 help("ggplot")                      
 ps
@@ -87,13 +93,13 @@ psc <- ps +
             color = "black", size = 6,vjust=0.1)
 plotschinus<-psc+geom_point(data=dfgrafico,aes(x=Tratamento,y=media),size=2.5,alpha=1)+
   geom_text(data = data, aes(x = 1, y = 0.3, label = "a"), 
-            color = "black", size = 3)+
+            color = "black", size = 5)+
 geom_text(data = data, aes(x = 2, y = 0.1, label = "b"), 
-          color = "black", size = 3)+
-geom_text(data = data, aes(x = 3, y = 0.3, label = "ac"), 
-          color = "black", size = 3)+
+          color = "black", size = 5)+
+geom_text(data = data, aes(x = 3, y = 0.3, label = "a"), 
+          color = "black", size = 5)+
 geom_text(data = data, aes(x = 4, y = 0.21, label = "ab"), 
-          color = "black", size = 3)
+          color = "black", size = 5)
 plotschinus
 ggsave("plot_schinus.jpg", width=6, height=4.5, dpi=600)
 ####

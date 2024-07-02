@@ -63,24 +63,30 @@ ggplot(data = data, aes(y = tamanho,
   theme_minimal()
 #grafico com as médias e os dados
 plot <- ggplot(data = data, aes(x = tratamento, y = tamanho, colour=tratamento))+
-  scale_y_continuous(name = "Tamanho das plántulas")+
+  scale_y_continuous(name = "Tamanho das plántulas (mm)",limits = c(0,100))+
   scale_x_discrete(name = "Tipo de Solução")+
-  geom_beeswarm(size=3, alpha=0.1)+
-  theme_classic()
+  geom_beeswarm(size=4, alpha=0.1)+
+  theme_classic()+
+  theme(axis.title.x = element_text(size = 15),  # X-axis title size
+        axis.title.y = element_text(size = 15),  # Y-axis title size
+        axis.text.x = element_text(size = 14),   # X-axis text size
+        axis.text.y = element_text(size = 14),   # Y-axis text size
+        legend.title = element_text(size = 15),  # Legend title size
+        legend.text = element_text(size = 14))
 plot
 dfgrafico
 # Adicionar segmentos e letras das médias
 plott1 <- plot +
   geom_segment(data = dfgrafico, aes(x = tratamento, y = ymin, xend = tratamento, yend = ymax), 
-               color = "black",alpha=0.8, size = 0.6)+
+               color = "black",alpha=0.8, size = 0.7)+
   geom_text(data = dfgrafico, aes(x = 2, y = 90, label = "a"),
-                                  color = "black", size = 3)+
+                                  color = "black", size = 5)+
   geom_text(data = dfgrafico, aes(x = 1, y = 80, label = "a"),
-            color = "black", size = 3)+
+            color = "black", size = 5)+
   geom_text(data = dfgrafico, aes(x = 3, y = 60, label = "b"),
-            color = "black", size = 3)+
+            color = "black", size = 5)+
   geom_text(data = dfgrafico, aes(x = 4, y = 60, label = "b"),
-            color = "black", size = 3)
+            color = "black", size = 5)
 plott1
 plott1alface<-plott1+geom_point(data=dfgrafico,aes(x=tratamento,y=media),size=2.5,alpha=1)
 plott1alface
@@ -108,7 +114,6 @@ porcext2.5peg
 porcext5peg<-100/49.922*10.415
 porcext5peg
 #Segundo tamanho alface
-#Primeiro tamanho alface
 data<- read.csv(here::here("Data/processed", "segunda_tamanho_alface.csv"), sep = ";", header=TRUE)
 data
 #tratamentos como fator
@@ -155,32 +160,33 @@ dfgrafico2
 #grafico para exploração
 library(ggplot2)
 library(ggbeeswarm)
-ggplot(data = data, aes(y = tamanho,
-                        x = tratamento,
-                        fill = tratamento)) +
-  geom_boxplot() +
-  geom_jitter(size = .8)+
-  theme_classic()
+
 #grafico com as médias e os dados
 plot <- ggplot(data = data, aes(x = tratamento, y = tamanho, colour=tratamento))+
-  scale_y_continuous(name = "Tamanho das plántulas")+
+  scale_y_continuous(name = "Tamanho das plántulas (mm)", limits = c(0,100))+
   scale_x_discrete(name = "Tipo de Solução")+
-  geom_beeswarm(size=3, alpha=0.1)+
-  theme_classic()
+  geom_beeswarm(size=4, alpha=0.1)+
+  theme_classic()+
+  theme(axis.title.x = element_text(size = 15),  # X-axis title size
+        axis.title.y = element_text(size = 15),  # Y-axis title size
+        axis.text.x = element_text(size = 14),   # X-axis text size
+        axis.text.y = element_text(size = 14),   # Y-axis text size
+        legend.title = element_text(size = 15),  # Legend title size
+        legend.text = element_text(size = 14))
 plot
 dfgrafico2
 # Adicionar segmentos e letras das médias
 plott2 <- plot +
   geom_segment(data = dfgrafico2, aes(x = tratamento, y = ymin, xend = tratamento, yend = ymax), 
-               color = "black",alpha=0.8, size = 0.6)+
+               color = "black",alpha=0.8, size = 0.7)+
   geom_text(data = dfgrafico2, aes(x = 2, y = 100, label = "a"),
-            color = "black", size = 3)+
+            color = "black", size = 5)+
   geom_text(data = dfgrafico2, aes(x = 1, y = 100, label = "a"),
-            color = "black", size = 3)+
+            color = "black", size = 5)+
   geom_text(data = dfgrafico2, aes(x = 3, y = 60, label = "b"),
-            color = "black", size = 3)+
+            color = "black", size = 5)+
   geom_text(data = dfgrafico2, aes(x = 4, y = 62, label = "b"),
-            color = "black", size = 3)
+            color = "black", size = 5)
 plott2
 plott2alface<-plott2+geom_point(data=dfgrafico2,aes(x=tratamento,y=media),size=2.5,alpha=1)
 plott2alface

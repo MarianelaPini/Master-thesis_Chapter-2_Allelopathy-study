@@ -28,10 +28,17 @@ mean_propor
 
 ```{r, echo= FALSE}
 plot_lithraea <- ggplot(data = data, aes(x = tratamento, y = propor, colour=tratamento))+
-  scale_y_continuous(name = "Proporção de sementes germinadas")+
+  scale_y_continuous(name = "Proporção de sementes germinadas", limits = c(0,0.6))+
   scale_x_discrete(name = "Tipo de Solução")+
-  geom_beeswarm(size=3, alpha=0.4)+
-                      theme_classic()
+  geom_beeswarm(size=5, alpha=0.4)+
+                      theme_classic()+
+  theme(axis.title.x = element_text(size = 17),  # X-axis title size
+  axis.title.y = element_text(size = 17),  # Y-axis title size
+  axis.text.x = element_text(size = 15),   # X-axis text size
+  axis.text.y = element_text(size = 15),   # Y-axis text size
+  legend.title = element_text(size = 15),  # Legend title size
+  legend.text = element_text(size = 14))
+
 plot_lithraea
 ggsave("plot_lithraea.jpg", width=6, height=4.5, dpi=600)
 ```
